@@ -4,6 +4,25 @@
   padding: 2rem;
   text-align: center;
 }
+@font-face {
+  font-family: "superFunky";
+  src: url(assets/superfunky.ttf);
+  
+}
+
+@font-face {
+  font-family: "notes";
+  src:url(assets/notes.ttf)
+}
+h1{
+  /* font-family: "notes";
+  font-size: 64px; */
+}
+p4{
+  /* font-family: "notes";
+  font-size: 32px; */
+}
+
 
 .logo {
   height: 6em;

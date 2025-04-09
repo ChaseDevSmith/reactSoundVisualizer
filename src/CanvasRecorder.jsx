@@ -47,12 +47,12 @@ const CanvasRecorder = ({ canvasRef }) => {
   return (
     <div>
       {!isRecording ? (
-        <button onClick={startRecording}>Start Recording</button>
+        <button onClick={startRecording}>Record Visual Effects</button>
       ) : (
-        <button onClick={stopRecording}>Stop Recording</button>
+        <button onClick={stopRecording}>Stop Recording Effects</button>
       )}
       {recordedBlob && (
-        <button onClick={downloadVideo}>Download Video</button>
+        <button onClick={downloadVideo}>Download Recorded Video</button>
       )}
     </div>
   );

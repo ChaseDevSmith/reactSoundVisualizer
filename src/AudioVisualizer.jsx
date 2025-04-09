@@ -9,9 +9,7 @@ const AudioVisualizer = ({ audioFile, station }) => {
   const audioSourceRef = useRef(null);
   
   const resizeCanvas = () => {
-    const canvas = canvasRef.current;
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+   
   };
   
   useEffect(() => {
@@ -27,8 +25,13 @@ const AudioVisualizer = ({ audioFile, station }) => {
   };
 
   useEffect(() => {
+    
     if (!audioFile) return;
+    
+   
     const canvas = canvasRef.current;
+    canvas.width = 800;
+    canvas.height = 600;
     const context = canvas.getContext("2d");
     const audioElement = audioRef.current;
 
@@ -40,7 +43,7 @@ const AudioVisualizer = ({ audioFile, station }) => {
 
       audioSourceRef.current.connect(analyserRef.current);
       analyserRef.current.connect(audioContext.destination);
-      analyserRef.current.fftSize = 64;
+      analyserRef.current.fftSize = 256;
     }
 
     const audioContext = audioContextRef.current;
@@ -102,38 +105,7 @@ const AudioVisualizer = ({ audioFile, station }) => {
     };
    
     
-//     const pspAnimation = () => {
-//       context.clearRect(0, 0, canvas.width, canvas.height);
-//       analyser.getByteFrequencyData(dataArray);
-
-//       const barWidth = canvas.width / bufferLength;
-//       const x = 0;
-
-//       for (let i = 0; i < bufferLength; i++) {
-//         const barHeight = dataArray[i] * 3; 
-//         context.fillStyle = "blue";  
-//         context.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-//         x += barWidth;
-//       }
-//       var amplitude = 100;
-// var frequency = 0.05;
-// var phase = 0;
-
-// ctx.beginPath();
-// ctx.moveTo(0, canvas.height / 2);
-
-// for(var x = 0; x < canvas.width; x++) {
-//     var y = amplitude * Math.sin(frequency * x + phase);
-//     ctx.lineTo(x, y + canvas.height / 2);
-// }
-
-// ctx.strokeStyle = "blue";
-// ctx.stroke();
-
-// phase += 0.05;
-
-
-//     };
+ 
     const starAnimation = () => {
       context.clearRect( 0,0, canvas.width, canvas.height);
 context.fillStyle = '';
@@ -200,10 +172,11 @@ for (let i = 0; i < bufferLength; i++){
     };
   
     const circleAnimation = () => {
+      analyserRef.current.fftSize = 128;
+
       context.clearRect( 0,0, canvas.width, canvas.height);
       context.fillStyle = '';
       analyser.getByteFrequencyData(dataArray);
-      analyserRef.current.fftSize = 64;
 
       // let barHeight;
       let barWidth = 15;
@@ -219,22 +192,46 @@ for (let i = 0; i < bufferLength; i++){
           context.beginPath();
           context.arc(0,barHeight,barHeight/10,0,Math.PI*2);
           context.fill();
-          // context.beginPath();
-          // context.arc(0,barHeight/1.5,barHeight/20,0,Math.PI*2);
-          // context.fill();
-          // context.beginPath();
-          // context.arc(0,barHeight*2,barHeight/30,0,Math.PI*2);
-          // context.fill();
-          // context.beginPath();
-          // context.arc(0,barHeight*2.5,barHeight/40,0,Math.PI*2);
-          // context.fill();
-         
+      
           x += barWidth;
           context.restore();
           
       
       }
       };
+      const pspMusicVisualizer = () => {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        analyser.getByteFrequencyData(dataArray);
+        analyserRef.current.fftSize = 256;  
+      
+        const barWidth = 3;
+        const barCount = bufferLength / 2; 
+        const radius = 100;
+        const angleStep = (Math.PI * 2) / barCount;  
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+      
+        for (let i = 0; i < barCount; i++) {
+          const barHeight = dataArray[i] * 1.5;
+          const angle = angleStep * i;
+      
+          const x = centerX + Math.cos(angle) * radius;
+          const y = centerY + Math.sin(angle) * radius;
+      
+          const hue = (i * 360) / barCount;
+          context.fillStyle = `hsl(${hue}, 100%, 50%)`;
+      
+          context.save();
+          context.translate(x, y);
+          context.rotate(angle);
+      
+          context.fillRect(-barWidth / 2, -barHeight, barWidth, barHeight);
+      
+          context.restore();
+        }
+      };
+      
+    
       const colorTunnelAnimation = () => {
         context.clearRect( 0,0, canvas.width, canvas.height);
         context.fillStyle = '';
@@ -294,26 +291,6 @@ for (let i = 0; i < bufferLength; i++){
         
         }
         };
-      const yellowCAnimation = () => {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        analyser.getByteFrequencyData(dataArray);
-  
-        const radius = 200;
-        let angleStep = (Math.PI * 2) / bufferLength;
-        let angle = 0;
-  
-        for (let i = 0; i < bufferLength; i++) {
-          const barHeight = dataArray[i] * .2;
-          const x = canvas.width / 2 + radius * Math.cos(angle);
-          const y = canvas.height / 2 + radius * Math.sin(angle);
-  
-          context.beginPath();
-          context.arc(x, y, barHeight, 0, Math.PI * 2);
-          context.fillStyle = "yellow";
-          context.fill();
-          angle += angleStep;
-        }
-      };
       const rainbowAnimation = () => {
         context.clearRect( 0,0, canvas.width, canvas.height);
         analyser.getByteFrequencyData(dataArray);
@@ -334,105 +311,45 @@ for (let i = 0; i < bufferLength; i++){
         }
        
       };
-    const fxAnimation = () => {
-context.clearRect( 0,0, canvas.width, canvas.height);
-context.fillStyle = '';
-analyser.getByteFrequencyData(dataArray);
-// let barHeight;
-let barWidth = 15;
-let x = 0;
+    const pianoKeyVisualizer = () => {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+  
+      analyser.getByteFrequencyData(dataArray);
+      analyserRef.current.fftSize = 256; 
+  
+      const keyWidth = 30;  
+      const gap = 35;  
+      const numKeys = Math.floor(canvas.width / (keyWidth + gap));  
+  
+      let centerY = canvas.height / 2;
+  
 
-for (let i = 0; i < bufferLength; i++){
-    const barHeight = dataArray[i] ^ 1.5;
-    context.save();
-    context.translate(canvas.width/2,canvas.height/2);
-    context.rotate(i^4.184);
+      for (let i = 0; i < numKeys; i++) {
+          let frequencyIndex = Math.floor(i * bufferLength / numKeys);  
+          let barHeight = dataArray[frequencyIndex] * 2;  
+  
+  
+          let keyColor = i % 2 === 0 ? "#FFFFFF" : "#000000";  
+          context.fillStyle = keyColor;
+  
 
-    const hue = 120 + i ^ -0.007;
-    context.fillStyle = 'hsl(' + hue + ', 100%, ' + barHeight / 3 + '%)';
-  context.beginPath();
-  context.arc(0, barHeight/2,barHeight/2,0,Math.PI/4);
-  context.fill();
-  context.stroke();
-
-    x += barWidth;
-    context.restore();
+          context.fillRect(
+              i * (keyWidth + gap), 
+              centerY - barHeight / 2,  
+              keyWidth, 
+              barHeight   
+          );
+      }
+  
+     
+     
+  
     
-
-}
-for (let i = 0; i < bufferLength; i++){
-  const barHeight = dataArray[i] ^ 1.5;
-  context.save();
-  context.translate(canvas.width/4,canvas.height/4);
-  context.rotate(i*4.184);
-
-  const hue = 120 + i ^ -0.007;
-  context.fillStyle = 'hsl(' + hue + ', 100%, ' + barHeight / 3 + '%)';
-context.beginPath();
-context.arc(0, barHeight/3,barHeight/3,0,Math.PI/3);
-context.fill();
-context.stroke();
-
-  x += barWidth;
-  context.restore();
-  
-
-}
-for (let i = 0; i < bufferLength; i++){
-  const barHeight = dataArray[i] ^ 1.5;
-  context.save();
-  context.translate(canvas.width/9,canvas.height/9);
-  context.rotate(i*4.184);
-
-  const hue = 120 + i ^ -0.007;
-  context.fillStyle = 'hsl(' + hue + ', 100%, ' + barHeight / 3 + '%)';
-context.beginPath();
-context.arc(0, barHeight/3,barHeight/3,0,Math.PI/3);
-context.fill();
-context.stroke();
-
-  x += barWidth;
-  context.restore();
-  
-
-}
-for (let i = 0; i < bufferLength; i++){
-  const barHeight = dataArray[i] ^ 1.5;
-  context.save();
-  context.translate(canvas.width/2.9,canvas.height/2.9);
-  context.rotate(i^89);
-
-  const hue = 27 + i ^ -2 ;
-  context.fillStyle = 'hsl(' + hue + ', 100%, ' + barHeight / 3 + '%)';
-context.beginPath();
-context.arc(0, barHeight/4,barHeight/4,0,Math.PI/4);
-context.fill();
-context.stroke();
-
-  x += barWidth;
-  context.restore();
-  
-
-}
-for (let i = 0; i < bufferLength; i++){
-  const barHeight = dataArray[i] ^ 1.5;
-  context.save();
-  context.translate(canvas.width/-2.9,canvas.height/-2.9);
-  context.rotate(i^89);
-
-  const hue = 40 + i *2.3 ;
-  context.fillStyle = 'hsl(' + hue + ', 100%, ' + barHeight / 3 + '%)';
-context.beginPath();
-context.arc(0, barHeight/4,barHeight/4,0,Math.PI/4);
-context.fill();
-context.stroke();
-
-  x += barWidth;
-  context.restore();
-  
-
-}
-}
+      context.save();
+      context.translate(-0.5, 0);  
+      context.restore();
+  };
+    
 const tajinAnimation = () => {
   context.clearRect( 0,0, canvas.width, canvas.height);
   context.fillStyle = '';
@@ -460,6 +377,7 @@ const tajinAnimation = () => {
   
   }
   }
+ 
 const lilyAnimation = () => {
   context.clearRect( 0,0, canvas.width, canvas.height);
   context.fillStyle = '';
@@ -487,37 +405,36 @@ const lilyAnimation = () => {
   
   }
   }
-
     const animate = () => {
       switch (station) {
         case "STRING CHEESE":
           shadowAnimation();
-        //   console.log("station1 ran!!");
+       
           break;
         case "PSP":
           colorTunnelAnimation();
-        //   console.log("station2 ran!!");
+
           break;
         case "CLEAN":
-          cleanAnimation();
-        //   console.log("station3 ran!!");
+          pianoKeyVisualizer();
+
           break;
           case "CIRCLES":
             circleAnimation();
-          //   console.log("station3 ran!!");
             break;
         case 'RAINBOW':
-            rainbowAnimation();
+          pspMusicVisualizer();
+          
+      
             break;
-        case "STAR":
-          starAnimation();
+        case "LILYPAD":
+          lilyAnimation();
           break;
-          case "FX":
-          fxAnimation();
+          case "TAJIN":
+            tajinAnimation();             
           break;
         default:
-          basicAnimation();
-        //   console.log("basic starts");
+              basicAnimation();     
           break;
       }
 
@@ -534,20 +451,24 @@ const lilyAnimation = () => {
     <div>
       {/* <h2>Audio Visualizer</h2> */}
       
-     
+  
       <audio ref={audioRef} controls>
         Your browser does not support the audio element.
       </audio>
       {/* <button onClick={playMiddleC}> Test </button> */}
       <button onClick={resetNodes}>Reset</button>
-      <canvas
+    
+            <CanvasRecorder canvasRef={canvasRef} />
+               <div>
+     <canvas
   ref={canvasRef}
   id="visualizer-canvas"  
   width={window.innerWidth}
   height={window.innerHeight}
 />
-            <CanvasRecorder canvasRef={canvasRef} />
+     </div>
     </div>
+    
   );
 };
 

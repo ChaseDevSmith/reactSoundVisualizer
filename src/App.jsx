@@ -19,7 +19,11 @@ function App() {
 
 // initAudio()
   return (
+    
    <div id ="container">
+   
+         <h1>Sound Visualizer !</h1>
+
     <div id = "selectBar">
     <StationSelector onStationChange={handleStationChange}/>
     <input type="file"  accept="audio/*" onChange={handleFileChange}></input>
