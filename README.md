@@ -1,1 +1,1 @@
-
+This project creates a canvas with visual effects created from looping over audio data. The effects from the canvas are downloadable for use in a video in post-production. Currently features 7 different visualizations, accessible here https://soundvisualizer.netlify.app/ . Have an audio file handy! 
